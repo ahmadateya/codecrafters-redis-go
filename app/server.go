@@ -9,14 +9,14 @@ import (
 func main() {
 	l := getListener()
 	defer l.Close()
+	// stage #2 respond to the two PING commands using the same connection.
+	conn, err := l.Accept()
+	if err != nil {
+		fmt.Println("Error accepting connection: ", err.Error())
+		os.Exit(1)
+	}
+	defer conn.Close()
 	for {
-		conn, err := l.Accept()
-		if err != nil {
-			fmt.Println("Error accepting connection: ", err.Error())
-			os.Exit(1)
-		}
-		// defer conn.Close()
-
 		buf := make([]byte, 1024)
 		if _, err := conn.Read(buf); err != nil {
 			fmt.Println("error reading from client: ", err.Error())
